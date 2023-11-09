@@ -1,0 +1,1 @@
+{"resourceType":"Medication","id":"345997bd-cb4c-4311-b865-81fd25ecbc51","code":{"coding":[{"system":"http://fhir.de/CodeSystem/bfarm/atc","code":"P01CA","display":"Nitroimidazol-Derivate"}]},"status":"active"}

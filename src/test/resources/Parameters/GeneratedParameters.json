@@ -1,0 +1,85 @@
+{
+  "resourceType": "Parameters",
+  "parameter": [ {
+    "name": "source",
+    "part": [ {
+      "name": "resourceType",
+      "valueCode": "Condition"
+    }, {
+      "name": "url",
+      "valueUrl": "file:///usr/share/staging/test/resources/NDJson/test_resources-Condition.ndjson"
+    } ]
+  }, {
+    "name": "source",
+    "part": [ {
+      "name": "resourceType",
+      "valueCode": "Specimen"
+    }, {
+      "name": "url",
+      "valueUrl": "file:///usr/share/staging/test/resources/NDJson/test_resources-Specimen.ndjson"
+    } ]
+  }, {
+    "name": "source",
+    "part": [ {
+      "name": "resourceType",
+      "valueCode": "Organization"
+    }, {
+      "name": "url",
+      "valueUrl": "file:///usr/share/staging/test/resources/NDJson/test_resources-Organization.ndjson"
+    } ]
+  }, {
+    "name": "source",
+    "part": [ {
+      "name": "resourceType",
+      "valueCode": "Consent"
+    }, {
+      "name": "url",
+      "valueUrl": "file:///usr/share/staging/test/resources/NDJson/test_resources-Consent.ndjson"
+    } ]
+  }, {
+    "name": "source",
+    "part": [ {
+      "name": "resourceType",
+      "valueCode": "Observation"
+    }, {
+      "name": "url",
+      "valueUrl": "file:///usr/share/staging/test/resources/NDJson/test_resources-Observation.ndjson"
+    } ]
+  }, {
+    "name": "source",
+    "part": [ {
+      "name": "resourceType",
+      "valueCode": "Medication"
+    }, {
+      "name": "url",
+      "valueUrl": "file:///usr/share/staging/test/resources/NDJson/test_resources-Medication.ndjson"
+    } ]
+  }, {
+    "name": "source",
+    "part": [ {
+      "name": "resourceType",
+      "valueCode": "Patient"
+    }, {
+      "name": "url",
+      "valueUrl": "file:///usr/share/staging/test/resources/NDJson/test_resources-Patient.ndjson"
+    } ]
+  }, {
+    "name": "source",
+    "part": [ {
+      "name": "resourceType",
+      "valueCode": "MedicationAdministration"
+    }, {
+      "name": "url",
+      "valueUrl": "file:///usr/share/staging/test/resources/NDJson/test_resources-MedicationAdministration.ndjson"
+    } ]
+  }, {
+    "name": "source",
+    "part": [ {
+      "name": "resourceType",
+      "valueCode": "Procedure"
+    }, {
+      "name": "url",
+      "valueUrl": "file:///usr/share/staging/test/resources/NDJson/test_resources-Procedure.ndjson"
+    } ]
+  } ]
+}
