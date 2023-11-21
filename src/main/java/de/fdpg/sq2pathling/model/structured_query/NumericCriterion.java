@@ -8,11 +8,8 @@ import de.fdpg.sq2pathling.model.common.Comparator;
 import de.fdpg.sq2pathling.model.fhirpath.BooleanExpression;
 import de.fdpg.sq2pathling.model.fhirpath.ComparatorExpression;
 import de.fdpg.sq2pathling.model.fhirpath.Expression;
-import de.fdpg.sq2pathling.model.fhirpath.IdentifierExpression;
-import de.fdpg.sq2pathling.model.fhirpath.InvocationExpression;
 import de.fdpg.sq2pathling.model.fhirpath.MemberInvocation;
 import de.fdpg.sq2pathling.model.fhirpath.QuantityExpression;
-import java.math.BigDecimal;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -123,18 +120,13 @@ public final class NumericCriterion extends AbstractCriterion {
   }
 
   BooleanExpression valueExpr(MappingContext mappingContext, Mapping mapping) {
-//    if (mapping.key().equals(AgeFunctionMapping.AGE)) {
-//      return ageExpr();
-//    }
+    if (mapping.key().termCode().equals(AgeUtils.AGE)) {
+      return AgeUtils.translateAge(mapping.valueFhirPath(), comparator, value.intValue(), AgeUnit.valueOf(unit));
+    }
     var memberInvocation = MemberInvocation.of(mapping.valueFhirPath());
     return ComparatorExpression.of(memberInvocation, comparator, quantityExpression(value, unit));
   }
 
-//  private Container<BooleanExpression> ageExpr() {
-//    var quantity = QuantityExpression.of(value);
-//    var comparatorExpr = ComparatorExpression.of(ageFunc, comparator, quantity);
-//    return Container.of(comparatorExpr);
-//  }
 
   private Expression quantityExpression(BigDecimal value, String unit) {
     return unit == null ? QuantityExpression.of(value) : QuantityExpression.of(value, unit);

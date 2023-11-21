@@ -94,7 +94,8 @@ public final class ValueSetCriterion extends AbstractCriterion {
     return valuePathExpr(identifierExpression, mapping);
   }
 
-  private BooleanExpression valuePathExpr(IdentifierExpression identifierExpression, Mapping mapping) {
+  private BooleanExpression valuePathExpr(IdentifierExpression identifierExpression,
+      Mapping mapping) {
     if ("Coding".equals(mapping.valueType())) {
       var result = selectedConcepts.stream().map(termCode -> {
         var whereSystemFunction = WhereFunction.of(ComparatorExpression.of(
@@ -110,9 +111,27 @@ public final class ValueSetCriterion extends AbstractCriterion {
             whereSystemFunction,
             existsCodeInvocation);
         return (BooleanExpression) InvocationExpression.of(
+            identifierExpression,
+            systemAndCodeExpression);
+      }).reduce(BooleanExpression.FALSE, OrExpression::of);
+      return result;
+    } else if ("CodeableConcept".equals(mapping.valueType())) {
+      var result = selectedConcepts.stream().map(termCode -> {
+        var whereSystemFunction = WhereFunction.of(ComparatorExpression.of(
+            IdentifierExpression.of("system"),
+            Comparator.EQUAL,
+            StringLiteralExpression.of("%s".formatted(termCode.system()))));
+        var existsCodeInvocation = FunctionInvocation.of("exists", List.of(
+            ComparatorExpression.of(
+                IdentifierExpression.of("code"),
+                Comparator.EQUAL,
+                StringLiteralExpression.of("%s".formatted(termCode.code())))));
+        var systemAndCodeExpression = InvocationExpression.of(
+            whereSystemFunction,
+            existsCodeInvocation);
+        return (BooleanExpression) InvocationExpression.of(
             InvocationExpression.of(
-                identifierExpression,
-                MemberInvocation.of("coding")),
+                identifierExpression, MemberInvocation.of("coding")),
             systemAndCodeExpression);
       }).reduce(BooleanExpression.FALSE, OrExpression::of);
       return result;

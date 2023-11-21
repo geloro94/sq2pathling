@@ -6,9 +6,6 @@ import de.fdpg.sq2pathling.model.Mapping;
 import de.fdpg.sq2pathling.model.MappingContext;
 import de.fdpg.sq2pathling.model.fhirpath.BetweenExpression;
 import de.fdpg.sq2pathling.model.fhirpath.BooleanExpression;
-import de.fdpg.sq2pathling.model.fhirpath.Expression;
-import de.fdpg.sq2pathling.model.fhirpath.IdentifierExpression;
-import de.fdpg.sq2pathling.model.fhirpath.InvocationExpression;
 import de.fdpg.sq2pathling.model.fhirpath.MemberInvocation;
 import de.fdpg.sq2pathling.model.fhirpath.QuantityExpression;
 import java.math.BigDecimal;
@@ -37,52 +34,58 @@ public final class RangeCriterion extends AbstractCriterion {
     this.unit = unit;
   }
 
-  public static RangeCriterion of(ContextualConcept concept, BigDecimal lowerBound, BigDecimal upperBound) {
+  public static RangeCriterion of(ContextualConcept concept, BigDecimal lowerBound,
+      BigDecimal upperBound) {
     return new RangeCriterion(concept, List.of(), null, requireNonNull(lowerBound),
         requireNonNull(upperBound), null);
   }
 
-  public static RangeCriterion of(ContextualConcept concept, BigDecimal lowerBound, BigDecimal upperBound,
+  public static RangeCriterion of(ContextualConcept concept, BigDecimal lowerBound,
+      BigDecimal upperBound,
       String unit,
       AttributeFilter... attributeFilters) {
     return new RangeCriterion(concept, List.of(attributeFilters), null, requireNonNull(lowerBound),
         requireNonNull(upperBound), requireNonNull(unit));
   }
 
-  public static RangeCriterion of(ContextualConcept concept, BigDecimal lowerBound, BigDecimal upperBound,
+  public static RangeCriterion of(ContextualConcept concept, BigDecimal lowerBound,
+      BigDecimal upperBound,
       TimeRestriction timeRestriction,
       AttributeFilter... attributeFilters) {
     return new RangeCriterion(concept, List.of(attributeFilters), null, requireNonNull(lowerBound),
         requireNonNull(upperBound), null);
   }
 
-  public static RangeCriterion of(ContextualConcept concept, BigDecimal lowerBound, BigDecimal upperBound,
+  public static RangeCriterion of(ContextualConcept concept, BigDecimal lowerBound,
+      BigDecimal upperBound,
       String unit, TimeRestriction timeRestriction,
       AttributeFilter... attributeFilters) {
     return new RangeCriterion(concept, List.of(attributeFilters), null, requireNonNull(lowerBound),
         requireNonNull(upperBound), requireNonNull(unit));
   }
 
-    public BigDecimal getLowerBound() {
-        return lowerBound;
-    }
+  public BigDecimal getLowerBound() {
+    return lowerBound;
+  }
 
-    public BigDecimal getUpperBound() {
-        return upperBound;
-    }
+  public BigDecimal getUpperBound() {
+    return upperBound;
+  }
 
-    public Optional<String> getUnit() {
-        return Optional.ofNullable(unit);
-    }
+  public Optional<String> getUnit() {
+    return Optional.ofNullable(unit);
+  }
 
   @Override
   BooleanExpression valueExpr(MappingContext mappingContext, Mapping mapping) {
+    if (mapping.key().termCode().equals(AgeUtils.AGE)) {
+      return AgeUtils.translateAgeFromRange(mapping.valueFhirPath(), lowerBound.intValue(),
+          upperBound.intValue(), AgeUnit.valueOf(unit));
+    }
     var castExpr = MemberInvocation.of(mapping.valueFhirPath());
     return BetweenExpression.of(castExpr, quantityExpression(lowerBound, unit),
         quantityExpression(upperBound, unit));
   }
-
-
 
 
   private QuantityExpression quantityExpression(BigDecimal value, String unit) {
