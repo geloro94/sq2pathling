@@ -34,9 +34,9 @@ class RangeCriterionTest {
 
 
   static final MappingContext MAPPING_CONTEXT = MappingContext.of(Map.of(
-      PLATELETS, Mapping.of(PLATELETS, "Observation", "code", "value", null, List.of(),
+      PLATELETS, Mapping.of(PLATELETS, "Observation", "code.coding", "value", null, List.of(),
           List.of(AttributeMapping.of("Code", STATUS, "status"))),
-      OTHER_VALUE_PATH, Mapping.of(OTHER_VALUE_PATH, "Observation", "code", "other")
+      OTHER_VALUE_PATH, Mapping.of(OTHER_VALUE_PATH, "Observation", "code.coding", "other")
   ), null);
 
 
@@ -152,7 +152,7 @@ class RangeCriterionTest {
     var criterion = RangeCriterion.of(ContextualConcept.of(PLATELETS), BigDecimal.valueOf(20),
         BigDecimal.valueOf(30), "g/dl");
     var mappingContext = MappingContext.of(Map.of(
-        PLATELETS, Mapping.of(PLATELETS, "Observation", "code", "value", null,
+        PLATELETS, Mapping.of(PLATELETS, "Observation", "code.coding", "value", null,
             List.of(CodeModifier.of("status", "final")),
             List.of())
     ), null);

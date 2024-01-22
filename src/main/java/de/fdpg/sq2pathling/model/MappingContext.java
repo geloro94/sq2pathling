@@ -6,9 +6,11 @@ import de.fdpg.sq2pathling.model.common.TermCode;
 import de.fdpg.sq2pathling.model.structured_query.Concept;
 import de.fdpg.sq2pathling.model.structured_query.ContextualConcept;
 import de.fdpg.sq2pathling.model.structured_query.ContextualTermCode;
+import de.fdpg.sq2pathling.model.structured_query.TranslationException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -65,7 +67,12 @@ public class MappingContext {
   public Stream<ContextualTermCode> expandConcept(ContextualConcept concept) {
     List<ContextualTermCode> expandedCodes = conceptTree == null ? List.of() : expandCodes(concept);
     List<ContextualTermCode> concepts = expandedCodes.isEmpty() ? concept.contextualTermCodes() : expandedCodes;
-    return concepts.stream().filter(mappings::containsKey);
+    List<ContextualTermCode> filtered = concepts.stream()
+        .filter(mappings::containsKey).toList();
+    if (filtered.isEmpty()) {
+      throw new TranslationException("Failed to expand the concept " + concept + ".");
+    }
+    return filtered.stream();
   }
 
   private List<ContextualTermCode> expandCodes(ContextualConcept concept) {

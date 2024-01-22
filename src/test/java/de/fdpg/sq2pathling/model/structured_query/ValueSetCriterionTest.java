@@ -64,12 +64,12 @@ class ValueSetCriterionTest {
 
 
   static final MappingContext MAPPING_CONTEXT = MappingContext.of(Map.of(
-      COVID, Mapping.of(COVID, "Observation", "code", "valueCodeableConcept", "Coding", List.of(),
+      COVID, Mapping.of(COVID, "Observation", "code.coding", "valueCodeableConcept.coding", "Coding", List.of(),
           List.of(AttributeMapping.of("Code", STATUS, "status")), null),
-      SEX, Mapping.of(SEX, "Observation", "code", "value", "Coding"),
-      FINDING, Mapping.of(FINDING, "Condition", "code", "severity", "Coding"),
-      TNM_C, Mapping.of(TNM_C, "Observation", "code", "value"),
-      TNM_P, Mapping.of(TNM_P, "Observation", "code", "value")
+      SEX, Mapping.of(SEX, "Observation", "code.coding", "value.coding", "Coding"),
+      FINDING, Mapping.of(FINDING, "Condition", "code.coding", "severity.coding", "Coding"),
+      TNM_C, Mapping.of(TNM_C, "Observation", "code.coding", "value", "C"),
+      TNM_P, Mapping.of(TNM_P, "Observation", "code.coding", "value")
   ), null);
 
 
@@ -378,7 +378,7 @@ class ValueSetCriterionTest {
   void toPathling_WithFixedCriteria() {
     var criterion = ValueSetCriterion.of(ContextualConcept.of(COVID), POSITIVE);
     var mappingContext = MappingContext.of(Map.of(
-        COVID, Mapping.of(COVID, "Observation", "code", "valueCodeableConcept", "Coding",
+        COVID, Mapping.of(COVID, "Observation", "code.coding", "valueCodeableConcept.coding", "Coding",
             List.of(CodeModifier.of("status", "final")),
             List.of())
     ), null);
@@ -397,7 +397,7 @@ class ValueSetCriterionTest {
     var criterion = ValueSetCriterion.of(ContextualConcept.of(ETHNIC_GROUP), MIXED);
     var mappingContext = MappingContext.of(Map.of(
         ETHNIC_GROUP, Mapping.of(ETHNIC_GROUP, "Patient", "",
-            "extension.where(url='https://www.netzwerk-universitaetsmedizin.de/fhir/StructureDefinition/ethnic-group').first().value()",
+            "extension.where(url='https://www.netzwerk-universitaetsmedizin.de/fhir/StructureDefinition/ethnic-group').first().value().coding",
             "Coding")
     ), null);
 

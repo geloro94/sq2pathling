@@ -28,7 +28,7 @@ public class NumericCriterionTest {
 
   public static final MappingContext MAPPING_CONTEXT = MappingContext.of(
       Map.of(BODY_WEIGHT,
-          Mapping.of(BODY_WEIGHT, "Observation", "code", "valueQuantity")),
+          Mapping.of(BODY_WEIGHT, "Observation", "code.coding", "valueQuantity")),
       TermCodeNode.of(BODY_WEIGHT));
 
   @Test

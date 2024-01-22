@@ -209,7 +209,7 @@ class ConceptCriterionTest {
   @Test
   void toPathling() {
     var criterion = ConceptCriterion.of(ContextualConcept.of(C71));
-    var mappingContext = MappingContext.of(Map.of(C71, Mapping.of(C71, "Condition")),
+    var mappingContext = MappingContext.of(Map.of(C71, Mapping.of(C71, "Condition", "code.coding")),
         TermCodeNode.of(C71));
 
     var expression = criterion.toFhirPathFilter(mappingContext);
@@ -223,8 +223,8 @@ class ConceptCriterionTest {
   void toPathling_WithMultipleTermCodes() {
     var criterion = ConceptCriterion.of(
         ContextualConcept.of(CONTEXT, Concept.of(C71_1_TC, C71_2_TC)));
-    var mappings = Map.of(C71_1, Mapping.of(C71_1, "Condition"), C71_2,
-        Mapping.of(C71_2, "Condition"));
+    var mappings = Map.of(C71_1, Mapping.of(C71_1, "Condition", "code.coding"), C71_2,
+        Mapping.of(C71_2, "Condition", "code.coding"));
     var mappingContext = MappingContext.of(mappings, TermCodeNode.of(C71));
 
     var expression = criterion.toFhirPathFilter(mappingContext);
@@ -239,7 +239,7 @@ class ConceptCriterionTest {
   void toPathling_WithAttributeFilter() {
     var criterion = ConceptCriterion.of(ContextualConcept.of(C71));
     criterion.appendAttributeFilter(ValueSetAttributeFilter.of(VERIFICATION_STATUS, CONFIRMED));
-    var mapping = Mapping.of(C71, "Condition", "code", null, null, List.of(),
+    var mapping = Mapping.of(C71, "Condition", "code.coding", null, null, List.of(),
         List.of(AttributeMapping.of("Coding", VERIFICATION_STATUS, "verificationStatus")));
     var mappingContext = MappingContext.of(Map.of(C71, mapping), TermCodeNode.of(C71));
 
@@ -255,9 +255,9 @@ class ConceptCriterionTest {
   void toPathling_Expanded_WithAttributeFilter() {
     var criterion = ConceptCriterion.of(ContextualConcept.of(C71));
     criterion.appendAttributeFilter(ValueSetAttributeFilter.of(VERIFICATION_STATUS, CONFIRMED));
-    var mapping1 = Mapping.of(C71_1, "Condition", "code", null, null, List.of(),
+    var mapping1 = Mapping.of(C71_1, "Condition", "code.coding", null, null, List.of(),
         List.of(AttributeMapping.of("Coding", VERIFICATION_STATUS, "verificationStatus")));
-    var mapping2 = Mapping.of(C71_2, "Condition", "code", null, null, List.of(),
+    var mapping2 = Mapping.of(C71_2, "Condition", "code.coding", null, null, List.of(),
         List.of(AttributeMapping.of("Coding", VERIFICATION_STATUS, "verificationStatus")));
     var mappingContext = MappingContext.of(Map.of(C71_1, mapping1, C71_2, mapping2),
         TermCodeNode.of(C71, TermCodeNode.of(C71_1), TermCodeNode.of(C71_2)));
@@ -279,7 +279,7 @@ class ConceptCriterionTest {
         NumericAttributeFilter.of(DIASTOLIC_BLOOD_PRESSURE, LESS_THAN, BigDecimal.valueOf(80),
             "mm[Hg]"));
     var mappingContext = MappingContext.of(Map.of(BLOOD_PRESSURE,
-        Mapping.of(BLOOD_PRESSURE, "Observation", "code", "value", null, List.of(), List.of(
+        Mapping.of(BLOOD_PRESSURE, "Observation", "code.coding", "value", null, List.of(), List.of(
             AttributeMapping.of("", DIASTOLIC_BLOOD_PRESSURE, format(
                 "component.where(code.coding.where(system = '%s').exists(code = '%s')).value.first()",
                 DIASTOLIC_BLOOD_PRESSURE.system(), DIASTOLIC_BLOOD_PRESSURE.code()))))), null);
@@ -296,7 +296,7 @@ class ConceptCriterionTest {
   void toPathling_FixedCriteria_Code() {
     var criterion = ConceptCriterion.of(ContextualConcept.of(THERAPEUTIC_PROCEDURE));
     var mappingContext = MappingContext.of(Map.of(THERAPEUTIC_PROCEDURE,
-        Mapping.of(THERAPEUTIC_PROCEDURE, "Procedure", "code", null, null,
+        Mapping.of(THERAPEUTIC_PROCEDURE, "Procedure", "code.coding", null, null,
             List.of(CodeModifier.of("status", "completed", "in-progress")), List.of())), null);
 
     var expression = criterion.toFhirPathFilter(mappingContext);
@@ -312,7 +312,7 @@ class ConceptCriterionTest {
   void toPathling_FixedCriteria_Coding() {
     var criterion = ConceptCriterion.of(ContextualConcept.of(C71));
     var mappingContext = MappingContext.of(
-        Map.of(C71, Mapping.of(C71, "Condition", "code", null, null,
+        Map.of(C71, Mapping.of(C71, "Condition", "code.coding", null, null,
             List.of(CodingModifier.of("verificationStatus", CONFIRMED)), List.of())),
         TermCodeNode.of(C71));
 

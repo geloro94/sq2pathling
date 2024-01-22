@@ -4,6 +4,7 @@ import de.fdpg.sq2pathling.model.MappingContext;
 import de.fdpg.sq2pathling.model.fhirpath.AndExpression;
 import de.fdpg.sq2pathling.model.fhirpath.BooleanExpression;
 import de.fdpg.sq2pathling.model.fhirpath.FunctionInvocation;
+import de.fdpg.sq2pathling.model.fhirpath.InvocationExpression;
 import de.fdpg.sq2pathling.model.fhirpath.OrExpression;
 import de.fdpg.sq2pathling.model.pathling.Parameter;
 import de.fdpg.sq2pathling.model.pathling.Parameters;
@@ -52,13 +53,14 @@ public class Translator {
     return new Translator(mappingContext);
   }
 
-  private static Parameter inclusionOnlyFilters(BooleanExpression inclusionExpr) {
-    return Parameter.of("filter", PrintContext.ZERO.print(inclusionExpr));
+  private static List<Parameter> inclusionOnlyFilters(BooleanExpression inclusionExpr) {
+    return List.of(AGGREGATION_PARAMETER, Parameter.of("filter", PrintContext.ZERO.print(inclusionExpr)));
   }
 
-  private static Parameter filters(BooleanExpression inclusionExpr,
+  private static List<Parameter> filters(BooleanExpression inclusionExpr,
       BooleanExpression exclusionExpr) {
-      return Parameter.of("filter", PrintContext.ZERO.print(AndExpression.of(inclusionExpr, exclusionExpr)));
+      return List.of(AGGREGATION_PARAMETER, Parameter.of("filter", PrintContext.ZERO.print(inclusionExpr)),
+          Parameter.of("filter", PrintContext.ZERO.print(InvocationExpression.of(exclusionExpr, FunctionInvocation.not()))));
   }
 
   /**
@@ -77,10 +79,11 @@ public class Translator {
       throw new IllegalStateException("Inclusion criteria lead to empty inclusion expression.");
     }
 
-    var filters = exclusionExpr == null
+    //TODO: This should be done with exlucsionExpr instead of the content of the exclusionCriteria in the StructuredQuery
+    var filters = structuredQuery.exclusionCriteria().get(0).isEmpty()
         ? inclusionOnlyFilters(inclusionExpr)
         : filters(inclusionExpr, exclusionExpr);
-    return Parameters.of(List.of(AGGREGATION_PARAMETER, filters));
+    return Parameters.of(filters);
   }
 
   /**

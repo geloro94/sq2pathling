@@ -10,6 +10,9 @@ public record DateTimeLiteralExpression(String value) implements Expression {
       "([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}(:[0-9]{2}(\\.[0-9]+)?)?(Z|([+-][0-9]{2}:[0-9]{2}))?)";
 
   public DateTimeLiteralExpression {
+    if (value.endsWith("T")) {
+      value = value.substring(0, value.length() - 1);
+    }
     validateFormat(value);
     value = '@' + value;
   }

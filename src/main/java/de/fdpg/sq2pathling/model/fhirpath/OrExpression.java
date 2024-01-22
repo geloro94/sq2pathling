@@ -24,10 +24,10 @@ public record OrExpression(List<BooleanExpression> expressions) implements
         return (OrExpression) BooleanExpression.TRUE;
       }
     }
-    if (e1 == BooleanExpression.FALSE) {
+    else if (e1 == BooleanExpression.FALSE) {
       return new OrExpression(List.of(requireNonNull(e2)));
     }
-    if (e2 == BooleanExpression.FALSE) {
+    else if (e2 == BooleanExpression.FALSE) {
       return new OrExpression(List.of(requireNonNull(e1)));
     }
     return new OrExpression(List.of(requireNonNull(e1), requireNonNull(e2)));
