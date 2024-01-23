@@ -52,26 +52,29 @@ public abstract class AbstractCriterion implements Criterion {
    */
   static BooleanExpression identifyResourceByTermCode(MappingContext mappingContext,
       ContextualTermCode termCode) {
-    return (mappingContext.findMapping(termCode)
-        .map(mapping -> {
-          var term_code_path = mapping.termCodePath();
-          var whereSystemFunction = WhereFunction.of(ComparatorExpression.of(
-              IdentifierExpression.of("system"),
-              Comparator.EQUAL,
-              StringLiteralExpression.of("%s".formatted(termCode.termCode().system()))));
-          var existsCodeInvocation = FunctionInvocation.of("exists", List.of(
-              ComparatorExpression.of(
-                  IdentifierExpression.of("code"),
-                  Comparator.EQUAL,
-                  StringLiteralExpression.of("%s".formatted(termCode.termCode().code())))));
-          var systemAndCodeExpression = InvocationExpression.of(
-              whereSystemFunction,
-              existsCodeInvocation);
-          return InvocationExpression.of(
-              IdentifierExpression.of(term_code_path),
-              systemAndCodeExpression);
-        })
-        .orElseThrow(() -> new MappingNotFoundException(termCode)));
+    var mapping = mappingContext.findMapping(termCode);
+    if (mapping.isEmpty()) {
+      throw new MappingNotFoundException(termCode);
+    }
+    var term_code_path = mapping.get().termCodePath();
+    if (term_code_path == null) {
+      return BooleanExpression.TRUE;
+    }
+    var whereSystemFunction = WhereFunction.of(ComparatorExpression.of(
+        IdentifierExpression.of("system"),
+        Comparator.EQUAL,
+        StringLiteralExpression.of("%s".formatted(termCode.termCode().system()))));
+    var existsCodeInvocation = FunctionInvocation.of("exists", List.of(
+        ComparatorExpression.of(
+            IdentifierExpression.of("code"),
+            Comparator.EQUAL,
+            StringLiteralExpression.of("%s".formatted(termCode.termCode().code())))));
+    var systemAndCodeExpression = InvocationExpression.of(
+        whereSystemFunction,
+        existsCodeInvocation);
+    return InvocationExpression.of(
+        IdentifierExpression.of(term_code_path),
+        systemAndCodeExpression);
   }
 
 
@@ -156,7 +159,7 @@ public abstract class AbstractCriterion implements Criterion {
     return timeRestriction;
   }
 
-  public void appendAttributeFilter(AttributeFilter attributeFilter)  {
+  public void appendAttributeFilter(AttributeFilter attributeFilter) {
     attributeFilters.add(attributeFilter);
   }
 }
